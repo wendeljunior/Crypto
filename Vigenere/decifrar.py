@@ -1,39 +1,31 @@
 import sys
 
 alfabeto = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
-alfabetoEspecial = "áâãóôõéíÁÂÃÓÔÕÉÍ"
 
 def decifrar(chave, textoCifrado):
-    chaveEstendida = estenderChave(chave, textoCifrado)
     textoDecifrado = ""
-    for i in range(0, len(chaveEstendida)):
-        if (textoCifrado[i] == '\n'):
-            textoDecifrado += '\n'
-            continue
-        if (textoCifrado[i] in alfabetoEspecial):
-            textoDecifrado += textoCifrado[i]
-            continue
+    textoCifradoAlfabeto = ""
+    for char in textoCifrado:
+        if (char in alfabeto):
+            textoCifradoAlfabeto += char
+    for i in range(0, len(textoCifradoAlfabeto)):
+        chaveEstendida = chave[i % len(chave)]
         try:
-            posicaoLetraTextoCifradoAlfabeto = alfabeto.index(textoCifrado[i])
-            posicaoLetraChaveEstendidaAlfabeto = alfabeto.index(chaveEstendida[i])
+            posicaoLetraTextoCifradoAlfabeto = alfabeto.index(textoCifradoAlfabeto[i])
+            posicaoLetraChaveEstendidaAlfabeto = alfabeto.index(chaveEstendida)
             posicaoLetraDecifradaAlfabeto = len(alfabeto) - posicaoLetraChaveEstendidaAlfabeto + posicaoLetraTextoCifradoAlfabeto;
             posicaoLetraDecifradaAlfabeto = posicaoLetraDecifradaAlfabeto % len(alfabeto)
             try:
                 textoDecifrado += alfabeto[posicaoLetraDecifradaAlfabeto]
             except IndexError:
-                print(posicaoLetraDecifradaAlfabeto)
-                return ""
+                print("ERRO 1" + posicaoLetraDecifradaAlfabeto)
+                return None
             #print(textoDecifrado)
         except ValueError:
-            textoDecifrado += textoCifrado[i]
-            
-    return textoDecifrado
+            print("ERRO 2")
+            return None
 
-def estenderChave(chave, texto):
-    chaveEstendida = ""
-    for i in range(0, len(texto)):
-        chaveEstendida += chave[i % len(chave)]
-    return chaveEstendida
+    return textoDecifrado
 
 diretorioChave = sys.argv[1]
 diretorioTexto = sys.argv[2]
