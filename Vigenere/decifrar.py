@@ -1,6 +1,7 @@
 import sys
 
 alfabeto = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+alfabeto_especial = "áàãâéèêíìîóòõôúùûÁÀÃÂÉÈÊÍÌÎÓÒÕÔÚÙÛ\n"
 
 def decifrar(chave, textoCifrado):
     textoDecifrado = ""
@@ -20,11 +21,9 @@ def decifrar(chave, textoCifrado):
             except IndexError:
                 print("ERRO 1" + posicaoLetraDecifradaAlfabeto)
                 return None
-            #print(textoDecifrado)
         except ValueError:
             print("ERRO 2")
             return None
-
     return textoDecifrado
 
 diretorioChave = sys.argv[1]
