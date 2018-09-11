@@ -4,7 +4,7 @@ import sys
 import urllib.request
 
 class Servidor:
-    host = socket.gethostname()
+    host = '127.0.0.1'
     porta = 5354
     conexoes = []
     nos = []
@@ -58,7 +58,10 @@ class Cliente:
         threadCliente.start()
 
         while(True):
-            dados = skt.recv(1024)
+            try:
+                dados = skt.recv(1024)
+            except KeyboardInterrupt:
+                break
             if not dados:
                 break
             if (dados[0:1] == b'\x11'):
