@@ -1,19 +1,18 @@
 import socket
 import threading
 import sys
+import urllib.request
 
 class Servidor:
-    host = '127.0.0.1'#socket.gethostname()
+    host = socket.gethostname()
     porta = 5354
     conexoes = []
     nos = []
-    #import urllib.request
-    #external_ip = urllib.request.urlopen('https://ident.me').read().decode('utf8')
 
 
     def __init__(self):
         skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        skt.bind(('0.0.0.0', 10000))
+        skt.bind((self.host, self.porta))
         skt.listen(1)
 
         while(True):
@@ -47,12 +46,13 @@ class Servidor:
             conexao.send(b'\x11' + bytes(no_str, 'utf-8'))
 
 class Cliente:
-    localhost = socket.gethostname()
+    ip_externo = urllib.request.urlopen('https://ident.me').read().decode('utf8')
+    host = ip_externo
     porta = 5354
 
     def __init__(self, enderecoIP):
         skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        skt.connect((enderecoIP, 10000))
+        skt.connect((enderecoIP, self.porta))
         threadCliente = threading.Thread(target=self.enviarMensagem, args=(skt, ))
         threadCliente.daemon = True
         threadCliente.start()
