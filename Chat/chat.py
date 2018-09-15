@@ -4,15 +4,23 @@ import sys
 import urllib.request
 
 class Servidor:
+    #nome do host onde a aplicacao esta a rodar
     host = socket.gethostname()
+    #porta padrao
     porta = 5354
+    #Tipo de endereço com os quais o socket ira se conectar: IP v4
+    dominio = socket.AF_INET
+    #Tipo de comunicacao entre os nos: TCP
+    tipo = socket.SOCK_STREAM
     conexoes = []
     nos = []
 
 
     def __init__(self):
-        skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #socket servidor TCP/IP
+        skt = socket.socket(self.dominio, self.tipo)
         skt.bind((self.host, self.porta))
+        #Ouvindo conexão para o socket
         skt.listen(1)
 
         while(True):
