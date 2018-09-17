@@ -1,4 +1,6 @@
 import sys
+import operator
+import codecs
 
 def gerarFluxo(chaveBytes, textoBytes):
     S = []
@@ -32,18 +34,31 @@ def gerarFluxo(chaveBytes, textoBytes):
         yield k
 
 
-def encriptar(texto, chave):
+def encriptar(chave, texto):
     chave_unicode_bytes = [ord(c) for c in chave] #traduzindo cada caractere da chave em unicode
     texto_unicode_bytes = [ord(c) for c in texto] #traduzindo cada caractere do texto em unicode
     fluxoChave = gerarFluxo(chave_unicode_bytes, texto_unicode_bytes)
-#    resultado = []
-#    for i in range(len(fluxoChave)):
-#        resultado.append(fluxoChave[i] ^ texto_unicode_bytes[(i+1) % len(fluxoChave)])
-#    for c in resultado:
-#        print("%02X" % c)
+    resultado = []
     for c in texto:
-        sys.stdout.write("%02X" % (next(ord(c)) ^ fluxoChave))
+        resultado.append("%02X" % operator.xor(ord(c), next(fluxoChave))) #XOR
+    return resultado
 
-chave = 'Key'
-texto = 'Plaintext'
-encriptar(chave, texto)
+def decriptar(chave, texto):
+    chave_unicode_bytes = [ord(c) for c in chave] #traduzindo cada caractere da chave em unicode
+    texto_unicode_bytes = [ord(c) for c in texto] #traduzindo cada caractere do texto em unicode
+    fluxoChave = gerarFluxo(chave_unicode_bytes, texto_unicode_bytes)
+    resultado = []
+    for c in texto:
+        resultado.append(chr(operator.xor(ord(c), next(fluxoChave))))  # XOR
+
+        #resultado.append(codecs.decode(codecs.decode(c,'hex'), 'ascii'))
+    return resultado
+
+chave = 'segredo'
+texto = 'Um texto qualquer'
+texto_encriptado = encriptar(chave, texto)
+print(texto_encriptado)
+int_texto_encriptado = [int(c, 16) for c in texto_encriptado]
+chars_texto_encriptado = [chr(c) for c in int_texto_encriptado]
+texto_decriptado = decriptar(chave, chars_texto_encriptado)
+print(texto_decriptado)
