@@ -48,17 +48,24 @@ def decriptar(chave, texto):
     texto_unicode_bytes = [ord(c) for c in texto] #traduzindo cada caractere do texto em unicode
     fluxoChave = gerarFluxo(chave_unicode_bytes, texto_unicode_bytes)
     resultado = []
+    texto_final = ""
     for c in texto:
         resultado.append(chr(operator.xor(ord(c), next(fluxoChave))))  # XOR
+    for c in resultado:
+        texto_final += c
+    return texto_final
 
-        #resultado.append(codecs.decode(codecs.decode(c,'hex'), 'ascii'))
-    return resultado
+def teste(chave="segredo", texto = 'Um texto qualquer'):
+    texto_encriptado = encriptar(chave, texto)
+    cifrado = ""
+    for c in texto_encriptado:
+        cifrado += c
+    print(cifrado)
+    int_texto_encriptado = [int(c, 16) for c in texto_encriptado]
+    chars_texto_encriptado = [chr(c) for c in int_texto_encriptado]
+    print(decriptar(chave, chars_texto_encriptado))
 
-chave = 'segredo'
-texto = 'Um texto qualquer'
-texto_encriptado = encriptar(chave, texto)
-print(texto_encriptado)
-int_texto_encriptado = [int(c, 16) for c in texto_encriptado]
-chars_texto_encriptado = [chr(c) for c in int_texto_encriptado]
-texto_decriptado = decriptar(chave, chars_texto_encriptado)
-print(texto_decriptado)
+if(len(sys.argv)>1):
+    teste(sys.argv[1], sys.argv[2])
+else:
+    teste()

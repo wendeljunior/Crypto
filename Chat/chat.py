@@ -1,7 +1,7 @@
 import socket
 import threading
 import sys
-import urllib.request
+import rc4
 
 class Servidor:
     #nome do host onde a aplicacao esta a rodar
@@ -14,7 +14,7 @@ class Servidor:
     tipo = socket.SOCK_STREAM
     conexoes = []
     nos = []
-
+    chave = "segredo"
 
     def __init__(self):
         #socket servidor TCP/IP
@@ -68,6 +68,7 @@ class Servidor:
 
 class Cliente:
     porta = 5354
+    chave = "segredo"
 
     def __init__(self, enderecoIP):
         skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -85,12 +86,15 @@ class Cliente:
                 break
             if (dados[0:1] == b'\x11'):
                 print('alguém entrou na conversa')
-            print(str(dados), 'utf-8')
+
+            print("destinatario: " + dados.decode('utf-8'))
 
     def enviarMensagem(self, skt):
         while(True):
             try:
-                skt.send(bytes(input(""), 'utf-8'))
+                texto = input("")
+                #texto_encriptado = rc4.encriptar(self.chave, texto_encriptado)
+                skt.send(bytes(texto, 'utf-8'))
             except EOFError:
                 print('Você saiu da conversa')
                 break
